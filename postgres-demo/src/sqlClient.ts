@@ -9,3 +9,5 @@ const sqlClient = postgres({
 });
 
 export default sqlClient;
+
+// patron de diseño singleton
