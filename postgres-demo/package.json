@@ -6,17 +6,21 @@
   "scripts": {
     "test": "vitest",
     "generate": "drizzle-kit generate:pg",
-    "introspect": "drizzle-kit introspect:pg --config=introspect.config.ts"
+    "introspect": "drizzle-kit introspect:pg --config=introspect.config.ts",
+    "dev": "tsx ./src/server.ts",
+    "watch": "tsx watch ./src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "drizzle-orm": "^0.30.9",
+    "fastify": "^4.26.2",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
     "drizzle-kit": "^0.20.17",
+    "tsx": "^4.7.3",
     "vitest": "^1.5.2"
   }
 }

@@ -1,0 +1,45 @@
+{
+  "info": {
+    "_postman_id": "f791ac6f-01e8-478c-8ddb-cae6272e7383",
+    "name": "requests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "hello-world",
+      "request": {
+        "description": "",
+        "method": "GET",
+        "header": [
+          { "key": "User-Agent", "value": "insomnia/8.6.1" },
+          { "key": "header-invalido", "value": "valor_no_valido" }
+        ],
+        "url": {
+          "raw": "{{ _.BASE_URL }}",
+          "host": ["{{ _", "BASE_URL }}"],
+          "path": []
+        },
+        "auth": {}
+      },
+      "response": []
+    },
+    {
+      "name": "obtener-usuarios",
+      "request": {
+        "description": "",
+        "method": "GET",
+        "header": [
+          { "key": "User-Agent", "value": "insomnia/8.6.1" },
+          { "key": "header-invalido", "value": "valor_no_valido" }
+        ],
+        "url": {
+          "raw": "{{ _.BASE_URL }}/usuarios",
+          "host": ["{{ _", "BASE_URL }}"],
+          "path": ["usuarios"]
+        },
+        "auth": {}
+      },
+      "response": []
+    }
+  ]
+}
