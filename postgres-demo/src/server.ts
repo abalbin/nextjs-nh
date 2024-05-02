@@ -11,7 +11,9 @@ server.get("/", async (request, reply) => {
     reply.code(400);
     return;
   }
-  return { hello: "world 1" };
+  return {
+    hello: "world 1",
+  };
 });
 
 // query string params
@@ -40,7 +42,9 @@ server.get("/usuarios", async (request, reply) => {
   }
 });
 server.get("/usuarios/:id", async (request, reply) => {
-  const { id: paramId } = request.params as { id: number };
+  const { id: paramId } = request.params as {
+    id: number;
+  };
   const user = await db.select().from(usuario).where(eq(usuario.id, paramId));
   if (!user[0]) {
     reply.code(404);
@@ -52,39 +56,82 @@ server.get("/usuarios/:id", async (request, reply) => {
 type InsertarUsuarioRequest = {
   nombres: string;
 };
-server.post<{ Body: InsertarUsuarioRequest }>(
-  "/usuarios",
-  async (request, reply) => {
-    const { nombres } = request.body;
-    if (!nombres) {
-      reply.code(400);
-      return;
-    }
-    const newUser = await db
-      .insert(usuario)
-      .values({
-        nombres,
-      })
-      .returning({ id: usuario.id });
-    return newUser;
+server.post<{
+  Body: InsertarUsuarioRequest;
+}>("/usuarios", async (request, reply) => {
+  const { nombres } = request.body;
+  if (!nombres) {
+    reply.code(400);
+    return;
   }
+  const newUser = await db
+    .insert(usuario)
+    .values({
+      nombres,
+    })
+    .returning({
+      id: usuario.id,
+    });
+  return newUser;
+});
+
+type ActualizarUsuarioRequest = {
+  id: number;
+} & InsertarUsuarioRequest;
+
+server.put<{
+  Body: ActualizarUsuarioRequest;
+  Params: { id: number };
+}>("/usuarios/:id", async (request, reply) => {
+  const { id, ...camposActuzlizables } = request.body;
+  const { id: idParam } = request.params;
+  // /usuario/321 -> se quiere editar el usuario 321
+  // body -> { id: 123, nombres: "nuevo nombre"} -> si se lee el id del boy
+  // para actualizar, se terminará modificando otro registro
+  if (id !== +idParam) {
+    reply.code(400);
+    return;
+  }
+
+  // obtener el registro existente
+  // const arreglo = await db...
+  // forma tradicional:
+  // const usuarioActual = arreglo[0]
+  const [usuarioActual] = await db
+    .select()
+    .from(usuario)
+    .where(eq(usuario.id, id))
+    .limit(1);
+  if (!usuarioActual) {
+    reply.code(404);
+    return;
+  }
+
+  // para hacer un update, vamos a hacer un merge de los campos
+  const queryUpdate = db
+    .update(usuario)
+    .set({ ...usuarioActual, ...camposActuzlizables })
+    .where(eq(usuario.id, id));
+
+  return {
+    result: await queryUpdate,
+  };
+});
+server.delete<{ Params: { id: number } }>(
+  "/usuarios/:id",
+  async (request, reply) => {
+    await db.delete(usuario).where(eq(usuario.id, request.params.id));
+    return { message: "El usuario ha sido eliminado." };
+  },
 );
-//   server.put('/usuarios/:id', async (request, reply) => {
-//     const { nombre, email } = request.body;
-//     const user = await db.update().set({ no
-//   mbre, email }).where({ id: request.params.id }).execute
-//   ();
-//     return user;
-//   });
-//   server.delete('/usuarios/:id', async (request, reply) =>
-//   {
-//     await db.delete().where({ id: request.p
-//   arams.id }).execute();
-//     return { message: 'El usuario ha sido eliminado.' };
-//   });
 
 // se inicializa el servidor
-server.listen({ port: 3000 }, (err, address) => {
-  if (err) throw err;
-  console.log(`Server listening on ${address}`);
-});
+server.listen(
+  {
+    port: 3000,
+  },
+  (err, address) => {
+    if (err) throw err;
+    console.log(`Server listening on ${address}`);
+  },
+);
