@@ -1,11 +1,14 @@
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { CompletarAsignacionForm } from "./completar-asignacion-form";
 
 export function AsignacionesDialog({
   open,
@@ -18,12 +21,12 @@ export function AsignacionesDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>Completar la tarea</DialogTitle>
         </DialogHeader>
+        <CompletarAsignacionForm />
+        <DialogFooter>
+          <Button>Guardar</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
