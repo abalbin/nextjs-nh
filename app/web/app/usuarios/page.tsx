@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ListTodo } from "lucide-react";
+import { ListTodo, User } from "lucide-react";
 import Link from "next/link";
 
 type Response = {
@@ -48,6 +48,16 @@ export default async function UsuariosIndex() {
                       Ver asignaciones
                     </Button> */}
                     {/* Este es un link con los estilos del componente botón */}
+                    <Link
+                      className={buttonVariants({
+                        variant: "default",
+                        size: "sm",
+                      })}
+                      href={`/usuarios/${usuario.id}`}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Ver Detalles
+                    </Link>
                     <Link
                       className={buttonVariants({
                         variant: "default",
