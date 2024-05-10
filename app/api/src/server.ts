@@ -1,5 +1,8 @@
 import fastify from "fastify";
+import cors from "@fastify/cors";
+
 import usuariosController from "./controllers/usuariosController";
+import asignacionesController from "./controllers/asignacionesController";
 
 const server = fastify({
   logger: {
@@ -15,8 +18,16 @@ const server = fastify({
   },
 });
 
+// configurar CORS
+server.register(cors, {
+  origin: "*", // esto es para permitir cualquier origen
+  methods: ["GET", "POST", "PUT", "DELETE"], // estos son los métodos permitidos
+});
+
 // yo quiero la ruta: https://api.empresa.com/usuarios/....
 server.register(usuariosController, { prefix: "/usuarios" });
+
+server.register(asignacionesController, { prefix: "/asignaciones" });
 
 server.listen({ port: 3000 }, (err, address) => {
   if (err) throw err;

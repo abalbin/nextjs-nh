@@ -17,6 +17,8 @@ export const asignacion = pgTable("asignacion", {
   fechaEntrega: date("fecha_entrega"),
   idUsuario: integer("id_usuario").references(() => usuario.id),
   idTarea: integer("id_tarea").references(() => tarea.id),
+  comentario: text("comentario"),
+  archivo: text("archivo"),
 });
 export const tarea = pgTable("tarea", {
   id: serial("id").primaryKey().notNull(),

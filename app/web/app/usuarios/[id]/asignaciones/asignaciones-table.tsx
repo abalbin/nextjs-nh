@@ -89,16 +89,19 @@ export function AsignacionesTable({
   data: GetUsuarioAsignacionesResponseItem[];
 }) {
   const [completeDialogOpen, setCompleteDialogOpen] = useState(false);
+  const [selectedAsignacion, setSelectedAsignacion] = useState(0);
   return (
     <div>
       <AsignacionesDialog
         open={completeDialogOpen}
         setOpen={setCompleteDialogOpen}
+        idAsignacion={selectedAsignacion}
       />
       <DataTable
         columns={getColumns({
-          abrirDialogo: () => {
+          abrirDialogo: (idAsignacion) => {
             setCompleteDialogOpen(true);
+            setSelectedAsignacion(idAsignacion);
           },
         })}
         data={data}
