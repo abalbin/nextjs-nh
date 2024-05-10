@@ -24,11 +24,12 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   comentario: z
     .string()
-    .min(20, "Ingresa un comentario de al menos 20 caracteres"),
+    .min(2, "Ingresa un comentario de al menos 20 caracteres"),
   fecha_entrega: z.date({
     required_error: "Ingresa una fecha de entrega",
     invalid_type_error: "Ingresa una fecha válida",
@@ -41,6 +42,7 @@ export const CompletarAsignacionForm = ({
 }: {
   idAsignacion: number;
 }) => {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,16 +64,29 @@ export const CompletarAsignacionForm = ({
 
     const request = { comentario, fecha_entrega, archivo: base64 };
 
-    await fetch(
-      `http://localhost:3000/asignaciones/${idAsignacion}/completar`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request),
-      }
-    );
+    fetch(`http://localhost:3000/asignaciones/${idAsignacion}/completar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Ocurrió un error al guardar la asignación");
+        }
+        toast({
+          title: "Éxito",
+          description: "se guardó la asignación",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Ocurrió un error al guardar la asignación",
+        });
+      });
   }
   return (
     <Form {...form}>

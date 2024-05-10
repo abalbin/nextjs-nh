@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 
 import usuariosController from "./controllers/usuariosController";
 import asignacionesController from "./controllers/asignacionesController";
+import authController from "./controllers/authController";
 
 const server = fastify({
   logger: {
@@ -28,6 +29,8 @@ server.register(cors, {
 server.register(usuariosController, { prefix: "/usuarios" });
 
 server.register(asignacionesController, { prefix: "/asignaciones" });
+
+server.register(authController, { prefix: "/auth" });
 
 server.listen({ port: 3000 }, (err, address) => {
   if (err) throw err;
