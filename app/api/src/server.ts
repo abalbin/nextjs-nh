@@ -4,6 +4,7 @@ import cors from "@fastify/cors";
 import usuariosController from "./controllers/usuariosController";
 import asignacionesController from "./controllers/asignacionesController";
 import authController from "./controllers/authController";
+import jwt from "@fastify/jwt";
 
 const server = fastify({
   logger: {
@@ -17,6 +18,24 @@ const server = fastify({
       },
     },
   },
+});
+
+server.register(jwt, { secret: "supersecret" });
+
+server.decorate("verifyJWT", function (request, reply) {
+  // esperamos un header Authotization con el token que tenga el formato "Bearer <token>"
+  const token = request.headers.authorization?.replace("Bearer ", "");
+  if (!token) {
+    reply.code(401).send({ success: false, message: "Unauthorized" });
+    return;
+  }
+  try {
+    this.jwt.verify(token);
+  } catch (error) {
+    console.error(error);
+    reply.code(401).send({ success: false, message: "Unauthorized" });
+    return;
+  }
 });
 
 // configurar CORS

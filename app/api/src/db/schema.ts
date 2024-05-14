@@ -11,6 +11,8 @@ export const usuario = pgTable("usuario", {
   id: serial("id").primaryKey().notNull(),
   nombres: varchar("nombres", { length: 200 }),
   apellidos: varchar("apellidos", { length: 200 }),
+  password: varchar("password", { length: 100 }),
+  email: varchar("email", { length: 100 }),
 });
 export const asignacion = pgTable("asignacion", {
   id: serial("id").primaryKey().notNull(),

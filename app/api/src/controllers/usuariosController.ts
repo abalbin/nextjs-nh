@@ -8,6 +8,7 @@ import { GetUsuarioAsignacionesResponse } from "../../../shared/types";
 const usuariosController: FastifyPluginAsync = async (fastify, options) => {
   // Ruta final: GET /usuarios/
   fastify.get("/", async (request, reply) => {
+    fastify.verifyJWT(request, reply);
     const users = await db.select().from(usuario).orderBy(usuario.id);
     return {
       success: true,
