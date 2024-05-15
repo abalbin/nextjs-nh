@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListTodo, User } from "lucide-react";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 type Response = {
@@ -17,8 +18,13 @@ type Response = {
 
 // server component
 export default async function UsuariosIndex() {
+  const token = cookies().get("token");
+  console.log("token", token);
   const response = await fetch("http://localhost:3000/usuarios", {
     cache: "no-cache",
+    headers: {
+      Authorization: `Bearer ${token?.value}`,
+    },
   });
   const responseData = (await response.json()) as Response;
   return (

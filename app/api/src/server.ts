@@ -27,14 +27,14 @@ server.decorate("verifyJWT", function (request, reply) {
   const token = request.headers.authorization?.replace("Bearer ", "");
   if (!token) {
     reply.code(401).send({ success: false, message: "Unauthorized" });
-    return;
+    return reply;
   }
   try {
     this.jwt.verify(token);
   } catch (error) {
     console.error(error);
     reply.code(401).send({ success: false, message: "Unauthorized" });
-    return;
+    return reply;
   }
 });
 
